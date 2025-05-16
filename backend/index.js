@@ -134,17 +134,17 @@ const clearDb = async () => {
 // Example usage
 (async () => {
     const messages = [
-        { sender: 'Sam', timestamp: new Date('2024-05-01T10:00:00Z'), text: 'J’adore le moelleux au chocolat.' },
+        { sender: 'Sam', timestamp: new Date('2024-05-01T10:00:00Z'), text: 'J\'adore le moelleux au chocolat.' },
         { sender: 'Moi', timestamp: new Date('2024-05-02T11:00:00Z'), text: 'Tu veux aller au café ce soir ?' },
         { sender: 'Sam', timestamp: new Date('2024-05-02T11:05:00Z'), text: 'Pas trop motivé ces temps-ci...' },
         { sender: 'Moi', timestamp: new Date('2024-05-03T12:00:00Z'), text: 'On se parle moins ces derniers jours.' },
     ];
 
     // remove all messages from the database
-    await clearDb();
+    // await clearDb();
 
-    await storeChatData(messages);
-    const question = "Pourquoi on s'entend moins bien avec Sam ces jours-ci ?";
+    //await storeChatData(messages);
+    const question = "J'adore Sam?";
     const answer = await generateAnswer(question);
     console.log(answer);
 })();
