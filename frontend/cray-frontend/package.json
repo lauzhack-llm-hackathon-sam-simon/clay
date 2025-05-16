@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "next": "15.3.2",
+    "pixi-viewport": "^6.0.3",
     "pixi.js": "^8.9.2",
     "primereact": "^10.9.5",
     "react": "^19.0.0",
