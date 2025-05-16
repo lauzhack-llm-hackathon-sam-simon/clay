@@ -21,7 +21,7 @@ const readFileAsync = promisify(fs.readFile);
     const db = client.db(dbName);
     const collection = db.collection(collectionName);
 
-    const path = '/home/poca/Documents/Github/cray/data/your_instagram_activity/messages/inbox';
+    const path = '/Users/poca/Documents/Github/cray/data/your_instagram_activity/messages/inbox';
     const folders = fs.readdirSync(path);
 
     let count = 0;

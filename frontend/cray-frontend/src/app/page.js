@@ -1,7 +1,15 @@
+"use client"
+
 import { css } from '../../styled-system/css';
+import PixiCanvas from './pixi-canvas';
+
+//import { Splitter } from '~/components/ui/splitter'
 
 export default function Home() {
   return (
-    <div className={css({ fontSize: "2xl", fontWeight: 'bold' })}>Hello 🐼!</div>
+    <div>
+      <h1>Graph Viewer</h1>
+      <PixiCanvas />
+    </div>
   )
 }
