@@ -44,28 +44,38 @@ const PixiCanvas = () => {
       // activate plugins
       viewport.drag().pinch().wheel();
 
+      const data = randomArray(30);
       // Load the bunny texture.
-      const texture = await PIXI.Assets.load({
-        src: "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250",
-        loadParser: 'loadTextures'
-      });
+      const texture = await PIXI.Assets.load("http://localhost:62208/0_day.exe.jpg");
 
-      // Create a new Sprite from an image path
-      const bunny = new PIXI.Sprite(texture);
+      // Define center
+      const centerX = app.screen.width / 2;
+      const centerY = app.screen.height / 2;
 
-      const circle = new PIXI.Graphics()
-      .circle(0, 0, 100)
-      .fill(texture);
+      // Category angle base
+      const categoryAngleMap = new Map();
+      const categoryCount = 5;
+      for (let i = 1; i <= categoryCount; i++) {
+        categoryAngleMap.set(i, (2 * Math.PI / categoryCount) * (i - 1));
+      }
 
-      viewport.addChild(circle);
+      for (const item of data) {
+        const radius = 10 + item.weight / 5; // bigger weight = bigger circle
+        const distanceFromCenter = 200 - (item.weight / 2); // more important = closer to center
+        const angle = categoryAngleMap.get(item.category) + Math.random() * (Math.PI / categoryCount / 2); // slight randomness
 
-      // Center the sprite's anchor point
-      bunny.anchor.set(0.5);
+        const x = centerX + distanceFromCenter * Math.cos(angle);
+        const y = centerY + distanceFromCenter * Math.sin(angle);
 
-      // Move the sprite to the center of the screen
-      circle.x = app.screen.width / 2;
-      circle.y = app.screen.height / 2;
+        const circle = new PIXI.Graphics()
+          .circle(0, 0, radius)
+          .fill(texture);
 
+        circle.x = x;
+        circle.y = y;
+
+        viewport.addChild(circle);
+      }
     }
     loadPixi();
   }, []);
