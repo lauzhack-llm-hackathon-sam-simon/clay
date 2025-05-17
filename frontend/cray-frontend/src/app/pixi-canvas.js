@@ -28,8 +28,12 @@ const PixiCanvas = ({ profiles }) => {
     let x, y, tries = 0, overlaps;
     const maxTries = 100;
     do {
-      x = Math.random() * viewport.worldWidth;
-      y = Math.random() * viewport.worldHeight;
+      const centerX = viewport.worldWidth / 2;
+      const centerY = viewport.worldHeight / 2;
+      const spread = 500; // how far from the center (smaller = more centered)
+
+      x = centerX + (Math.random() - 0.5) * spread;
+      y = centerY + (Math.random() - 0.5) * spread;
       // overlaps = placedPositions.some(p => {
       //   const dx = x - p.x;
       //   const dy = y - p.y;

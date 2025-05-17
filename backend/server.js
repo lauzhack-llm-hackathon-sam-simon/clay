@@ -91,7 +91,9 @@ ${messages.map(m => `${m.sender}: ${m.message}`).join('\n')}
     const profilesOfActors = await (await getProfileCollection()).find({ username: { $in: Array.from(usernames) } }).toArray();
     console.log('Profiles of actors:', profilesOfActors);
 
-    res.json({ message: 'Query received', newProfiles: profilesOfActors, response: responseText });
+    const metadata = `Found ${messages.length} relevant messages and photos from ${Array.from(usernames).length} users.`;
+
+    res.json({ message: 'Query received', newProfiles: profilesOfActors, metadata, response: responseText });
 
     console.log('end');
 })

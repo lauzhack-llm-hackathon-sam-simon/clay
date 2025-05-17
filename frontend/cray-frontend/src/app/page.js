@@ -49,7 +49,7 @@ export default function Home() {
       console.log('Query result:', data);
       const newProfiles = data.newProfiles;
       setProfiles(profiles => [...profiles, ...newProfiles]);
-      setMessages(messages => [...messages, { sender: "Clay", text: data.response }]);
+      setMessages(messages => [...messages, { sender: "Clay", text: data.response, metadata: data.metadata }]);
     } catch (error) {
       console.error('Error querying:', error);
     }
@@ -65,6 +65,11 @@ export default function Home() {
             <div className="space-y-3 overflow-y-auto">
               {messages.map((message, index) => (
                 <Card title={message.sender} key={index} className="w-full">
+                  {message.metadata && (
+                    <p className="text-sm text-gray-500 mb-2">
+                      {message.metadata}
+                    </p>
+                  )}
                   <p className="m-0">{message.text}</p>
                 </Card>
               ))}
@@ -73,7 +78,7 @@ export default function Home() {
               <div className="p-inputgroup w-full">
                 <InputText placeholder="Talk to Clay..." className="w-full" value={queryContent} onChange={(e) => setQueryContent(e.target.value)} />
                 <Button icon="pi pi-send" className="p-button-warning w-auto" onClick={() => {
-                  setMessages(messages => [...messages, { sender: "You", text: queryContent }]);
+                  setMessages(messages => [...messages, { sender: "You", text: queryContent, metadata: null }]);
                   query(queryContent);
                   setQueryContent("");
                 }} />
