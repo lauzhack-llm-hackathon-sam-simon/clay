@@ -8,6 +8,18 @@ const PixiCanvas = () => {
   const pixiContainerRef = useRef(null);
 
   useEffect(() => {
+
+    const randomArray = (length) => {
+      const arr = [];
+      for (let i = 0; i < length; i++) {
+        arr.push({
+          weight: Math.floor(Math.random() * 255),
+          category: Math.floor(Math.random() * 5) + 1,
+        });
+      }
+      return arr;
+    }
+
     async function loadPixi() {
       const app = new PIXI.Application();
 
