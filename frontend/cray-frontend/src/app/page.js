@@ -6,7 +6,7 @@ import PixiCanvas from "./pixi-canvas";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Home() {
 
@@ -14,8 +14,13 @@ export default function Home() {
   const [queryContent, setQueryContent] = useState("");
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
+  const endRef = useRef(null);
 
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
     if (messages.length == 0) {
       const initialMessages = [
         {
@@ -38,7 +43,6 @@ export default function Home() {
     };
 
     fetchProfiles();
-
   }, []);
 
   const query = async (text) => {
@@ -52,66 +56,87 @@ export default function Home() {
     } catch (error) {
       console.error('Error querying:', error);
     }
-  }
+  };
 
   const askForProfileDetails = async (username, newProfiles) => {
     console.log('Asking for profile details:', newProfiles);
     const profile = newProfiles.find(p => p.username === username);
     console.log('Found profile:', profile);
     setMessages(messages => [...messages, {
-      sender: "CLAY", text: `
-      ${profile.username}, ${profile.profile.notableMemories.join('\n')}
-      `, metadata: null
+      sender: "CLAY",
+      text: (
+        <div>
+          Sure, here is more information about <b>{profile.username}</b>!
+          <br />
+          Notable memories and moments together:
+          <div className="flex flex-col space-y-2 mt-2">
+            <ul className="list-disc pl-5">
+              {profile.profile.notableMemories.map((item, index) => (
+                <li key={index} className="text-sm">{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ),
+      metadata: null
     }]);
-  }
-
+  };
 
   return (
-    <div>
-      <Splitter style={{ height: '100vh' }}>
-          <SplitterPanel className="flex align-items-center justify-content-center" size={70}>
-            <PixiCanvas profiles={profiles} askForProfileDetails={askForProfileDetails} />
-          </SplitterPanel>
-          <SplitterPanel className="flex flex-col justify-between p-3" size={30}>
-            <div className="space-y-3">
-              {messages.map((message, index) => {
-                const isYou = message.sender === "You";
-
-                return (
+    <div className="h-screen overflow-hidden">
+      <Splitter style={{ height: '100%' }}>
+        <SplitterPanel className="flex align-items-center justify-content-center" size={70}>
+          <PixiCanvas profiles={profiles} askForProfileDetails={askForProfileDetails} />
+        </SplitterPanel>
+        <SplitterPanel className="flex flex-col p-3" size={30}>
+          <div className="flex flex-col space-y-3 flex-1 overflow-y-auto pr-1">
+            {messages.map((message, index) => {
+              const isYou = message.sender === "You";
+              return (
+                <div
+                  key={index}
+                  className={`flex ${isYou ? "justify-end" : "justify-start"}`}
+                >
                   <div
-                    key={index}
-                    className={`flex ${isYou ? "justify-end" : "justify-start"}`}
+                    className={`
+                      max-w-[80%] px-4 py-2 rounded-2xl text-sm whitespace-pre-line
+                      ${isYou
+                        ? "bg-[#237cff] text-white rounded-br-none"
+                        : "bg-blue-100 text-black rounded-bl-none"}
+                    `}
                   >
-                    <div
-                      className={`
-                        max-w-[80%] px-4 py-2 rounded-2xl text-sm whitespace-pre-line
-                        ${isYou
-                          ? "bg-[#237cff] text-white rounded-br-none"
-                          : "bg-blue-100 text-black rounded-bl-none"}
-                      `}
-                    >
-                      {message.metadata && (
-                        <div className="text-xs text-gray-500 mb-1">
-                          {message.metadata}
-                        </div>
-                      )}
-                      {message.text}
-                    </div>
+                    {message.metadata && (
+                      <div className="text-xs text-gray-500 mb-1">
+                        {message.metadata}
+                      </div>
+                    )}
+                    {message.text}
                   </div>
-                );
-              })}
-            </div>
-            <div className="pt-3">
-              <div className="p-inputgroup w-full">
-                <InputText placeholder="Talk to CLAY..." className="w-full" value={queryContent} onChange={(e) => setQueryContent(e.target.value)} />
-                <Button icon="pi pi-send" className="p-button w-auto" onClick={() => {
+                </div>
+              );
+            })}
+            <div ref={endRef} />
+          </div>
+          <div className="pt-3">
+            <div className="p-inputgroup w-full">
+              <InputText
+                placeholder="Talk to CLAY..."
+                className="w-full"
+                value={queryContent}
+                onChange={(e) => setQueryContent(e.target.value)}
+              />
+              <Button
+                icon="pi pi-send"
+                className="p-button w-auto"
+                onClick={() => {
                   setMessages(messages => [...messages, { sender: "You", text: queryContent, metadata: null }]);
                   query(queryContent);
                   setQueryContent("");
-                }} />
-              </div>
+                }}
+              />
             </div>
-          </SplitterPanel>
+          </div>
+        </SplitterPanel>
       </Splitter>
     </div>
   );
