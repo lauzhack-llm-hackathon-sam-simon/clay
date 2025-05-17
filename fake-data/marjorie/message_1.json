@@ -1,0 +1,79 @@
+{
+    "participants": [
+      {
+        "name": "marjorie"
+      },
+      {
+        "name": "simon"
+      }
+    ],
+    "messages": [
+      {
+        "sender_name": "marjorie",
+        "timestamp_ms": 1675500000000,
+        "content": "I went to that new Mediterranean restaurant with Dad today. It was *so* good!",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675500050000,
+        "content": "Nice! What did you have?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "marjorie",
+        "timestamp_ms": 1675500080000,
+        "content": "We shared a mezze platter and I had this grilled eggplant dish with feta. Heaven 😍",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675500120000,
+        "content": "Sounds amazing. Where is it again?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "marjorie",
+        "timestamp_ms": 1675500150000,
+        "content": "It’s called ‘Oliva’, near the riverside. Super cozy, with candles and everything.",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "marjorie",
+        "timestamp_ms": 1675500180000,
+        "content": "Maybe next year on my birthday we should go there together! Oliva! Such a good restaurant.",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675500205000,
+        "content": "Noted 👀 Oliva birthday dinner 2024 locked in!",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "marjorie",
+        "timestamp_ms": 1675500230000,
+        "content": "Haha, only if you bring flowers this time for my birthday 😄",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675500255000,
+        "content": "Deal. Flowers, mezze, and eggplant. I’ll be the perfect son. 🌸",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      }
+    ],
+    "title": "Marjorie",
+    "is_still_participant": true,
+    "magic_words": []
+  }
+  

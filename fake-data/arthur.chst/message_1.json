@@ -1,0 +1,86 @@
+{
+    "participants": [
+      {
+        "name": "arthur.chst"
+      },
+      {
+        "name": "simon"
+      }
+    ],
+    "messages": [
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1688200000000,
+        "content": "How’s everything going with work lately?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "arthur.chst",
+        "timestamp_ms": 1688200025000,
+        "content": "Pretty good. Still at Google — just hit my 3-year mark last month actually!",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1688200050000,
+        "content": "Wow congrats! That’s a solid milestone. Still liking it there?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "arthur.chst",
+        "timestamp_ms": 1688200080000,
+        "content": "Yeah I mean, it’s been a great ride. Amazing people, cool projects… but I’ve been thinking a bit about what’s next, you know?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1688200105000,
+        "content": "Ah, starting to get the itch?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "arthur.chst",
+        "timestamp_ms": 1688200125000,
+        "content": "Something like that haha. Not in a rush, just keeping my eyes open. Might want to try something smaller or more product-focused than here at Google.",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1688200150000,
+        "content": "Makes sense. Google’s huge. Do you feel like you’ve outgrown your current team?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "arthur.chst",
+        "timestamp_ms": 1688200173000,
+        "content": "A bit. Or maybe I just want to see what I’m capable of in a different setting. Been doing infra stuff forever.",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1688200200000,
+        "content": "Whatever you end up doing, I’m sure it’ll be awesome. You’ve got the experience now.",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "arthur.chst",
+        "timestamp_ms": 1688200218000,
+        "content": "Appreciate that 🙏 let’s grab lunch next week if you're free — I’d love to chat more about it!",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      }
+    ],
+    "title": "Arthur",
+    "is_still_participant": true,
+    "magic_words": []
+  }
+  
