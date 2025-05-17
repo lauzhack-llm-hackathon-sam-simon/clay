@@ -2,7 +2,7 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css"; // global css
-import { Button } from "primereact/button";
+import 'primeicons/primeicons.css';
 import { useState } from "react";
 
 const geistSans = Geist({
