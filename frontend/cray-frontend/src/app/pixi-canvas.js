@@ -77,7 +77,7 @@ const PixiCanvas = ({ profiles, askForProfileDetails }) => {
       .lineTo(circle.x, circle.y)
       .stroke({
         color: 0x237cff,
-        width: 1.5,
+        width: 1,
       });
 
     viewport.addChild(connection);

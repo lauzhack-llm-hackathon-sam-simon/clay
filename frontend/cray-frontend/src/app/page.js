@@ -58,7 +58,20 @@ export default function Home() {
     console.log('Found profile:', profile);
     setMessages(messages => [...messages, {
       sender: "CLAY",
-      text: `${profile.username}, ${profile.profile.notableMemories.join('\n')}`,
+      text: (
+        <div>
+          Sure, here is more information about <b>{profile.username}</b>!
+          <br />
+          Notable memories and moments together:
+          <div className="flex flex-col space-y-2 mt-2">
+            <ul className="list-disc pl-5">
+              {profile.profile.notableMemories.map((item, index) => (
+                <li key={index} className="text-sm">{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ),
       metadata: null
     }]);
   };
