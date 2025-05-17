@@ -67,7 +67,7 @@ app.get('/query', async (req, res) => {
     const prompt = `
 You are a social media analyst. You have to analyze the following messages and answer the question.
 
-If the answer comes from a photo, please specify that in the answer.
+If the answer comes from a photo, please MAKE SURE to specify that in the answer.
 
 Question: ${text}
 
@@ -92,13 +92,15 @@ ${messages.map(m => `${m.sender}: ${m.message}`).join('\n')}
     console.log(Array.from(usernames))
 
     const profilesOfActors = await (await getProfileCollection()).find({ username: { $in: Array.from(usernames) } }).toArray();
-    console.log('Profiles of actors:', profilesOfActors);
+    //console.log('Profiles of actors:', profilesOfActors);
 
     const metadata = `Found ${messages.length} relevant messages and photos from ${Array.from(usernames).length} users.`;
 
+    console.log('Profiles of actors:', profilesOfActors);
+
     res.json({ message: 'Query received', newProfiles: profilesOfActors, metadata, response: responseText });
 
-    console.log('end');
+    //console.log('end');
 })
 
 app.listen(4000)
