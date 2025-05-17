@@ -1,5 +1,3 @@
-// clear-and-insert-testing.js
-
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -9,35 +7,43 @@ import { promisify } from 'util';
 import { promptOnManyMessages } from './split-n-merge.js';
 import { getProfileCollection, getMessagesCollection } from './mongo-client.js';
 import { getEmbedding } from './embedding.js';
-import { profile } from 'console';
 import Together from 'together-ai';
+import figlet from 'figlet';
 
 const readFileAsync = promisify(fs.readFile);
 
 (async () => {
 
-    const messagesCollection = await getMessagesCollection();
-    const profilesCollection = await getProfileCollection();
-    await messagesCollection.deleteMany({});
-    await profilesCollection.deleteMany({});
+    console.log(figlet.textSync("Clay Parser"));
 
-    const path = '/home/poca/Documents/Github/cray/fake-data/';
-    let user = "simon";
-    const folders = fs.readdirSync(path);
+    const dataPath = process.argv[2];
+    const currentUsername = process.argv[3];
+
+    const flags = process.argv.slice(4);
+    const persistenceEnabled = flags.includes('--persistence');
+
+    const messagesCollection = persistenceEnabled ? await getMessagesCollection() : null;
+    const profilesCollection = persistenceEnabled ? await getProfileCollection() : null;
+    if (persistenceEnabled) {
+        await messagesCollection.deleteMany({});
+        await profilesCollection.deleteMany({});
+    }
+
+    const folders = fs.readdirSync(dataPath);
 
     let count = 0;
-    let uniqueUser = 0;
+    let uniqueUserCount = 0;
 
     for (const folder of folders) {
+        // these users have been banned from Instagram
         if (folder.startsWith('instagramuser')) continue;
-        //if (!folder.startsWith('z')) continue;
-        // todo debug
+
         let idx = 1;
         let userMessageCount = 0;
         let messages = [];
         let participants = [];
-        while (fs.existsSync(join(path, folder, `message_${idx}.json`))) {
-            const filePath = join(path, folder, `message_${idx}.json`);
+        while (fs.existsSync(join(dataPath, folder, `message_${idx}.json`))) {
+            const filePath = join(dataPath, folder, `message_${idx}.json`);
             count++;
             idx++;
             const rawData = await readFileAsync(filePath, 'utf-8');
@@ -50,16 +56,18 @@ const readFileAsync = promisify(fs.readFile);
                     text: m.content,
                     timestamp: m.timestamp_ms,
                 }));
+            const otherUsername = participants.find(p => p !== currentUsername);
+            console.log(`[!] Detected ${otherUsername} messages...`);
             if (currentMessages.length > 0) {
                 const chunksOf2048 = [];
                 for (let i = 0; i < currentMessages.length; i += 2048) {
                     chunksOf2048.push(currentMessages.slice(i, i + 2048));
                 }
-                console.log(`Processing ${chunksOf2048.length} chunks of 2048 messages`);
+                console.log(`[..] Generating embeddings for ${chunksOf2048.length} chunks of 2048 messages`);
                 const embeddings = await Promise.all(chunksOf2048.map(chunk => getEmbedding(chunk.map(m => m.text))));
-                console.log(`Got ${embeddings.length} embeddings`);
+                console.log(`[OK] Got ${embeddings.length} embeddings`);
                 const collection = await getMessagesCollection();
-                await collection.insertMany(currentMessages.map((m, i) => ({
+                if (persistenceEnabled) await collection.insertMany(currentMessages.map((m, i) => ({
                     type: 'message',
                     sender: m.sender,
                     timestamp: m.timestamp,
@@ -69,9 +77,10 @@ const readFileAsync = promisify(fs.readFile);
             }
             const photoMessages = jsonData.messages.filter(m => m.photos?.length > 0);
             if (photoMessages.length > 0) {
+                console.log(`[!] Got ${photoMessages.length} photos to process...`);
                 const photoContents = await Promise.all(photoMessages.map(async (m) => {
                     const photo = m.photos[0];
-                    const photoPath = join(path, folder, photo.uri);
+                    const photoPath = join(dataPath, folder, photo.uri);
                     const photoData = await readFileAsync(photoPath);
                     const base64Content = photoData.toString('base64');
                     const together = new Together();
@@ -98,10 +107,7 @@ const readFileAsync = promisify(fs.readFile);
                     return explanations.choices[0].message.content;
                 }));
 
-                console.log(`Got ${photoContents.length} photo contents`);
-                photoContents.forEach((content, i) => {
-                    console.log(`Photo ${i + 1}: ${content}`);
-                });
+                console.log(`[OK] Got ${photoContents.length} photo contents`);
 
                 const photoEmbeddings = await Promise.all(photoContents.map(content => getEmbedding([content])));
 
@@ -113,15 +119,15 @@ const readFileAsync = promisify(fs.readFile);
                     embedding: photoEmbeddings[i][0],
                 }));
 
-                await messagesCollection.insertMany(messagesWithPhotos);
+                if (persistenceEnabled) await messagesCollection.insertMany(messagesWithPhotos);
 
                 console.log(`Got ${photoEmbeddings.length} photo embeddings`);
             }
 
             messages = messages.concat(currentMessages);
-            console.log(`User ${folder} has ${currentMessages.length} messages`);
+            console.log(`[OK] Processed ${folder} messages! (${currentMessages.length})`);
             if (participants.length > 2) {
-                console.log("Skipping group chat with participants:", participants.length);
+                console.log("[/!\\] Skipping group chat with participants:", participants.length);
                 continue;
             } else {
                 userMessageCount += jsonData.messages.length;
@@ -130,33 +136,11 @@ const readFileAsync = promisify(fs.readFile);
 
         if (userMessageCount > 0) {
             if (participants.length <= 2) {
-                const basePrompt = `
-Extract the following information in JSON format:
-
-{
-    "participants": [...], // example ["Alice", "Bob"]
-    "tone": "...",
-    "topics": [...], // example ["travel", "food", ...]
-    "status", // one of "stale", "critical", "endangered", "stable", "healthy"
-    "notableMemories": [
-        "In January 2024, you laughed together when you both misheard the same word during a late-night call.",
-        ...
-    ]
-}
-
-The "notableMemories" field should contain exactly the 5 most memorable or meaningful moments (in summary form).
-Avoid generic facts. Make it feel personal and evocative.
-"category" should be one of the following: "friendship", "romantic", "family", "study", "business", "other".
-Choose the most appropriate one.
-
-status depends on the quality of the conversation, and the frequency of messages exchanged.
-
-You are sending this data to ${user}, so use "you" to refer to them, and "them" to refer to the other person.
-                `;
+                const basePrompt = fs.readFileSync('./profile-card-prompt.txt', 'utf-8');
                 const profile = await promptOnManyMessages(
                     `
 You are analyzing a conversation between the following people: ${participants.join(",")}.
-user is ${user}.
+user is ${currentUsername}.
 
 Here are some chat messages:
 {messages}
@@ -173,22 +157,23 @@ ${basePrompt}
             `, messages
                 );
 
-                (await getProfileCollection()).insertOne({
+                if (persistenceEnabled) (await getProfileCollection()).insertOne({
                     type: 'profile',
-                    username: participants.find(p => p !== user),
+                    username: participants.find(p => p !== currentUsername),
                     participants: participants,
                     profile: profile,
                     messageCount: userMessageCount,
                 });
             }
-            console.log(`User ${folder} has ${userMessageCount} messages`);
+            console.log(`[OK] Processed ${folder}'s profile!`);
         } else {
-            console.log(`User ${folder} has no messages`);
+            console.log(`[WARN] User ${folder} has no messages`);
         }
-        uniqueUser++;
+        uniqueUserCount++;
     }
 
-    console.log(`Total number of message files: ${count}`);
-    console.log(`Total number of unique users: ${uniqueUser}`);
+    console.log(`We are done!`);
+
+    process.exit(0);
 
 })();

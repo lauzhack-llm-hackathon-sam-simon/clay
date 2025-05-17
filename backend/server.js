@@ -14,10 +14,10 @@ app.get('/initial', async (req, res) => {
 
     const collection = await getProfileCollection();
 
-    const topN = 10;
+    const topN = 2;
     const profiles = await collection.find({})
         .sort({ "messageCount": -1 })
-        .limit(2).toArray();
+        .limit(topN).toArray();
     console.log('Profiles:', profiles);
 
     res.json({ data: profiles });
@@ -58,7 +58,7 @@ app.get('/query', async (req, res) => {
     const usernames = new Set();
     const messages = [];
     for await (const doc of result) {
-        console.log(doc);
+        //console.log(doc);
         if (doc.score < 0.7) continue;
         usernames.add(doc.sender);
         messages.push(doc);
