@@ -2,32 +2,36 @@ import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
 
-import { getCollection, getMessagesCollection, getProfileCollection } from './mongo-client.js'
+import { getMessagesCollection, getProfileCollection } from './mongo-client.js'
 import { getEmbedding } from './embedding.js'
+import cors from 'cors';
 
 const app = express()
+app.use(cors());
 
 app.get('/initial', async (req, res) => {
 
-  const collection = await getProfileCollection();
+    const collection = await getProfileCollection();
 
-  const topN = 10;
-  const profiles = await collection.find({})
-  .sort({ "messageCount": -1 })
-  .limit(topN).toArray();
-  console.log('Profiles:', profiles);
+    const topN = 10;
+    const profiles = await collection.find({})
+        .sort({ "messageCount": -1 })
+        .limit(topN).toArray();
+    console.log('Profiles:', profiles);
+
+    res.json({ data: profiles });
 
 });
 
 app.get('/query', async (req, res) => {
-  const { text } = req.query;
-  
-  console.log('Received text:', text);
-  const [embedding] = await getEmbedding([text]);
+    const { text } = req.query;
 
-  const collection = await getMessagesCollection();
-  
-  const agg = [
+    console.log('Received text:', text);
+    const [embedding] = await getEmbedding([text]);
+
+    const collection = await getMessagesCollection();
+
+    const agg = [
         {
             '$vectorSearch': {
                 'index': 'vector_index_2',
@@ -55,9 +59,9 @@ app.get('/query', async (req, res) => {
         console.log(doc);
     }
 
-  res.json({ message: 'Query received', embedding });
+    res.json({ message: 'Query received', embedding });
 
-  console.log('end');
+    console.log('end');
 })
 
 app.listen(4000)

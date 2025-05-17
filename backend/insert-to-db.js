@@ -17,7 +17,7 @@ const readFileAsync = promisify(fs.readFile);
     const messagesCollection = await getMessagesCollection();
     await messagesCollection.deleteMany({});
 
-    const path = '/Users/poca/Documents/Github/cray/data_cleanedup/your_instagram_activity/messages/inbox';
+    const path = '/home/poca/Documents/Github/cray/fake-data/';
     let user = "simon";
     const folders = fs.readdirSync(path);
 

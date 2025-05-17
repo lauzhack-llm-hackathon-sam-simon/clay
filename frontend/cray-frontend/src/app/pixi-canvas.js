@@ -1,17 +1,29 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as PIXI from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
 
-let viewportRef;
+let viewport;
 let youCircle;
 const placedPositions = [];
 
-const PixiCanvas = () => {
+const PixiCanvas = ({ profiles }) => {
   const pixiContainerRef = useRef(null);
+  const pixiReadyRef = useRef(false);
 
-  const createNewConnection = (element, texture, viewport) => {
+  const [loadedUsernames, setLoadedUsernames] = useState([]);
+
+  const createNewConnection = async (element) => {
+
+    if (loadedUsernames.includes(element.username)) {
+      console.warn('Already loaded this username:', element.username);
+      return;
+    }
+    setLoadedUsernames(prev => [...prev, element.username]);
+
+    const texture = await PIXI.Assets.load(`http://localhost:3333/${element.username}.jpg`)
+
     const radius = 300;
     let x, y, tries = 0, overlaps;
     const maxTries = 100;
@@ -33,25 +45,39 @@ const PixiCanvas = () => {
 
     // draw new circle
     const circle = new PIXI.Graphics()
-    .circle(0, 0, radius)
-    .fill(texture)
+      .circle(0, 0, radius)
+      .fill(texture)
     circle.x = x; circle.y = y;
     circle.scale.set(0.1);
 
     const connection = new PIXI.Graphics()
-    .moveTo(youCircle.x, youCircle.y)
-    .lineTo(circle.x, circle.y)
-    .stroke({
-      color: 0x000000,
-      width: 2,
-    });
+      .moveTo(youCircle.x, youCircle.y)
+      .lineTo(circle.x, circle.y)
+      .stroke({
+        color: 0x000000,
+        width: 2,
+      });
 
     viewport.addChild(connection);
     viewport.addChild(circle);
     viewport.setChildIndex(connection, 0);
 
     placedPositions.push({ x, y, radius });
-    
+
+  };
+
+  const profilesRef = useRef([]);
+
+  useEffect(() => {
+    profilesRef.current = profiles;
+    createConnectionsIfReady();
+  }, [profiles]);
+
+  const createConnectionsIfReady = () => {
+    const currentProfiles = profilesRef.current;
+    if (!pixiReadyRef.current || !currentProfiles || currentProfiles.length === 0) return;
+    console.log("Creating connections if ready (ref):", currentProfiles);
+    currentProfiles.forEach(profile => createNewConnection(profile));
   };
 
   useEffect(() => {
@@ -77,13 +103,15 @@ const PixiCanvas = () => {
 
       pixiContainerRef.current.appendChild(app.canvas);
 
-      const viewport = new Viewport({
-          screenWidth: pixiContainerRef.current.offsetWidth,
-          screenHeight: pixiContainerRef.current.offsetHeight,
-          worldWidth: 1000,
-          worldHeight: 1000,
-          events: app.renderer.events, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
+      const viewportContainer = new Viewport({
+        screenWidth: pixiContainerRef.current.offsetWidth,
+        screenHeight: pixiContainerRef.current.offsetHeight,
+        worldWidth: 1000,
+        worldHeight: 1000,
+        events: app.renderer.events, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
       });
+
+      viewport = viewportContainer;
 
       // add the viewport to the stage
       app.stage.addChild(viewport);
@@ -91,12 +119,7 @@ const PixiCanvas = () => {
       // activate plugins
       viewport.drag().pinch().wheel();
 
-      const data = randomArray(30);
-
-      const youTexture = await PIXI.Assets.load("http://localhost:62208/smn_lfrt.jpg");
-
-      // Load the bunny texture.
-      const texture = await PIXI.Assets.load("http://localhost:62208/0_day.exe.jpg");
+      const youTexture = await PIXI.Assets.load("http://localhost:3333/smn_lfrt.jpg");
 
       // Define center
       const centerX = app.screen.width / 2;
@@ -110,13 +133,15 @@ const PixiCanvas = () => {
 
       viewport.addChild(youCircle);
 
-      viewportRef = viewport;
       placedPositions.push({ x: youCircle.x, y: youCircle.y, radius: 50 });
 
-      // Example call to createNewConnection
-      setTimeout(() => {
-        createNewConnection({ weight: 200, category: 3 }, texture, viewport);
-      }, 1000);
+      profiles.forEach((profile) => {
+        createNewConnection(profile);
+      });
+
+      pixiReadyRef.current = true;
+      setLoadedUsernames([]);
+      createConnectionsIfReady(); 
     }
     loadPixi();
   }, []);
