@@ -7,6 +7,10 @@ import { Viewport } from 'pixi-viewport';
 const PixiCanvas = () => {
   const pixiContainerRef = useRef(null);
 
+  const createNewConnection = (element) => { // element has a weight and a category
+   
+  }
+
   useEffect(() => {
 
     const randomArray = (length) => {
@@ -45,6 +49,9 @@ const PixiCanvas = () => {
       viewport.drag().pinch().wheel();
 
       const data = randomArray(30);
+
+      const youTexture = await PIXI.Assets.load("http://localhost:62208/smn_lfrt.jpg");
+
       // Load the bunny texture.
       const texture = await PIXI.Assets.load("http://localhost:62208/0_day.exe.jpg");
 
@@ -52,30 +59,11 @@ const PixiCanvas = () => {
       const centerX = app.screen.width / 2;
       const centerY = app.screen.height / 2;
 
-      // Category angle base
-      const categoryAngleMap = new Map();
-      const categoryCount = 5;
-      for (let i = 1; i <= categoryCount; i++) {
-        categoryAngleMap.set(i, (2 * Math.PI / categoryCount) * (i - 1));
-      }
+      const youCircle = new PIXI.Graphics()
+      .circle(centerX, centerY, 50)
+      .fill(youTexture);
 
-      for (const item of data) {
-        const radius = 10 + item.weight / 5; // bigger weight = bigger circle
-        const distanceFromCenter = 200 - (item.weight / 2); // more important = closer to center
-        const angle = categoryAngleMap.get(item.category) + Math.random() * (Math.PI / categoryCount / 2); // slight randomness
-
-        const x = centerX + distanceFromCenter * Math.cos(angle);
-        const y = centerY + distanceFromCenter * Math.sin(angle);
-
-        const circle = new PIXI.Graphics()
-          .circle(0, 0, radius)
-          .fill(texture);
-
-        circle.x = x;
-        circle.y = y;
-
-        viewport.addChild(circle);
-      }
+      viewport.addChild(youCircle);
     }
     loadPixi();
   }, []);
