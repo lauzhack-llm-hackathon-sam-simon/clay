@@ -1,13 +1,20 @@
 import fs from 'fs';
 
-const rawData = fs.readFileSync('./data/sam-following.json', 'utf-8');
-const json = JSON.parse(rawData);
+function extractUsernamesFromFile(filePath) {
+  const rawData = fs.readFileSync(filePath, 'utf-8');
+  const json = JSON.parse(rawData);
+  const dataArray = json.relationships_following || json.relationships_followers || json;
 
-const dataArray = json.relationships_following || json; 
+  return dataArray
+    .map(entry => entry?.string_list_data?.[0]?.value)
+    .filter(Boolean);
+}
 
-const usernames = dataArray
-  .map(entry => entry?.string_list_data?.[0]?.value)
-  .filter(Boolean);
+const following = extractUsernamesFromFile('../data/sam-following.json');
+const rawFollowers = extractUsernamesFromFile('../data/sam-followers.json');
 
-console.log('Total followers:', usernames.length);
-export const followers = usernames;
+const allUsernames = Array.from(new Set([...following, ...rawFollowers]));
+
+console.log('Total unique usernames (followers + following):', allUsernames.length);
+
+export const followers = allUsernames;

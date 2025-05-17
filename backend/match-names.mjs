@@ -21,17 +21,21 @@ const chatNames = folders
     return name.slice(0, lastUnderscoreIndex);
   });
 
-console.log("names");
-console.log(chatNames);
-console.log("--------------------------------");
-console.log(followers);
+// console.log("names");
+// console.log(chatNames);
+// console.log("--------------------------------");
+// console.log(followers);
+
+function normalize(str) {
+  return str.toLowerCase().replace(/[._]/g, '');
+}
 
 function preMatch(chatName, followers) {
-  const normalizedChatName = chatName.toLowerCase();
+  const normalizedChatName = normalize(chatName);
 
   // First try exact match
   for (const f of followers) {
-    const normalizedFollower = f.toLowerCase();
+    const normalizedFollower = normalize(f);
     if (normalizedFollower === normalizedChatName) {
       return { match: f, type: 'exact' };
     }
@@ -39,7 +43,7 @@ function preMatch(chatName, followers) {
 
   // Then try partial match
   for (const f of followers) {
-    const normalizedFollower = f.toLowerCase();
+    const normalizedFollower = normalize(f);
     if (normalizedFollower.includes(normalizedChatName) || normalizedChatName.includes(normalizedFollower)) {
       return { match: f, type: 'partial' };
     }
@@ -54,12 +58,19 @@ Your task is to choose the most likely Instagram username from the list of candi
 
 Chat name: "${chatName}"
 Candidates: [${candidates.map(c => `"${c}"`).join(', ')}]
-Which username most likely matches this chat name? Answer with one username from the list above, or "unknown" if no clear match.\n\nAnswer:`;
+Choose **only** one username from the list above. 
+Answer the username in the format: username
+So just return username, without any other text or formatting.
+Do not make up a new name. If you are unsure or there is no clear match, respond with: unknown.
+It means you just return text "unknown" without any other text or formatting.
+
+Answer:
+`;
 
   const res = await axios.post(
     'https://api.together.xyz/inference',
     {
-      model: 'mistralai/Mistral-7B-Instruct-v0.1',
+      model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
       prompt,
       max_tokens: 10,
       temperature: 0.3,
