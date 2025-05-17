@@ -19,8 +19,8 @@ export default function Home() {
     if (messages.length == 0) {
       const initialMessages = [
         {
-          sender: "Clay",
-          text: "Hey there! I'm Clay, your personal chats and network analyst 🤖\n\nI have analyzed your messages, photos and voice messages.",
+          sender: "CLAY",
+          text: "Hey there! I'm CLAY, your personal chats and network analyst 🤖\n\nI have analyzed your messages, photos and voice messages.",
         }
       ];
       setMessages(initialMessages);
@@ -48,7 +48,7 @@ export default function Home() {
       console.log('Query result:', data);
       const newProfiles = data.newProfiles;
       setProfiles(profiles => [...profiles, ...newProfiles]);
-      setMessages(messages => [...messages, { sender: "Clay", text: data.response, metadata: data.metadata }]);
+      setMessages(messages => [...messages, { sender: "CLAY", text: data.response, metadata: data.metadata }]);
     } catch (error) {
       console.error('Error querying:', error);
     }
@@ -59,7 +59,7 @@ export default function Home() {
     const profile = newProfiles.find(p => p.username === username);
     console.log('Found profile:', profile);
     setMessages(messages => [...messages, {
-      sender: "Clay", text: `
+      sender: "CLAY", text: `
       ${profile.username}, ${profile.profile.notableMemories.join('\n')}
       `, metadata: null
     }]);
@@ -98,7 +98,7 @@ export default function Home() {
             </div>
             <div className="pt-3">
               <div className="p-inputgroup w-full">
-                <InputText placeholder="Talk to Clay..." className="w-full" value={queryContent} onChange={(e) => setQueryContent(e.target.value)} />
+                <InputText placeholder="Talk to CLAY..." className="w-full" value={queryContent} onChange={(e) => setQueryContent(e.target.value)} />
                 <Button icon="pi pi-send" className="p-button-warning w-auto" onClick={() => {
                   setMessages(messages => [...messages, { sender: "You", text: queryContent, metadata: null }]);
                   query(queryContent);
