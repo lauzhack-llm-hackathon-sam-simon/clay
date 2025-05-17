@@ -4,12 +4,55 @@ import { useEffect, useRef } from 'react';
 import * as PIXI from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
 
+let viewportRef;
+let youCircle;
+const placedPositions = [];
+
 const PixiCanvas = () => {
   const pixiContainerRef = useRef(null);
 
-  const createNewConnection = (element) => { // element has a weight and a category
-   
-  }
+  const createNewConnection = (element, texture, viewport) => {
+    const radius = 300;
+    let x, y, tries = 0, overlaps;
+    const maxTries = 100;
+    do {
+      x = Math.random() * viewport.worldWidth;
+      y = Math.random() * viewport.worldHeight;
+      overlaps = placedPositions.some(p => {
+        const dx = x - p.x;
+        const dy = y - p.y;
+        // only consider overlapping when the two circles actually intersect
+        return Math.hypot(dx, dy) < radius + p.radius;
+      });
+      tries++;
+    } while (overlaps && tries < maxTries);
+
+    if (tries === maxTries) {
+      console.warn('Could not place circle without overlap after', maxTries, 'tries');
+    }
+
+    // draw new circle
+    const circle = new PIXI.Graphics()
+    .circle(0, 0, radius)
+    .fill(texture)
+    circle.x = x; circle.y = y;
+    circle.scale.set(0.1);
+
+    const connection = new PIXI.Graphics()
+    .moveTo(youCircle.x, youCircle.y)
+    .lineTo(circle.x, circle.y)
+    .stroke({
+      color: 0x000000,
+      width: 2,
+    });
+
+    viewport.addChild(connection);
+    viewport.addChild(circle);
+    viewport.setChildIndex(connection, 0);
+
+    placedPositions.push({ x, y, radius });
+    
+  };
 
   useEffect(() => {
 
@@ -59,11 +102,21 @@ const PixiCanvas = () => {
       const centerX = app.screen.width / 2;
       const centerY = app.screen.height / 2;
 
-      const youCircle = new PIXI.Graphics()
-      .circle(centerX, centerY, 50)
-      .fill(youTexture);
+      youCircle = new PIXI.Graphics()
+        .circle(0, 0, 50)
+        .fill(youTexture);
+      youCircle.x = centerX;
+      youCircle.y = centerY;
 
       viewport.addChild(youCircle);
+
+      viewportRef = viewport;
+      placedPositions.push({ x: youCircle.x, y: youCircle.y, radius: 50 });
+
+      // Example call to createNewConnection
+      setTimeout(() => {
+        createNewConnection({ weight: 200, category: 3 }, texture, viewport);
+      }, 1000);
     }
     loadPixi();
   }, []);
