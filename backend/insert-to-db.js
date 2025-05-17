@@ -6,13 +6,16 @@ dotenv.config();
 import fs from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
-import { promptOnManyMessages } from './prompt-on-many-msgs.js';
-import { getCollection } from './mongo-client.js';
+import { promptOnManyMessages } from './split-n-merge.js';
+import { getProfileCollection, getMessagesCollection } from './mongo-client.js';
 import { getEmbedding } from './embedding.js';
 
 const readFileAsync = promisify(fs.readFile);
 
 (async () => {
+
+    const messagesCollection = await getMessagesCollection();
+    await messagesCollection.deleteMany({});
 
     const path = '/Users/poca/Documents/Github/cray/data_cleanedup/your_instagram_activity/messages/inbox';
     let user = "simon";
@@ -50,7 +53,7 @@ const readFileAsync = promisify(fs.readFile);
                 console.log(`Processing ${chunksOf2048.length} chunks of 2048 messages`);
                 const embeddings = await Promise.all(chunksOf2048.map(chunk => getEmbedding(chunk.map(m => m.text))));
                 console.log(`Got ${embeddings.length} embeddings`);
-                const collection = await getCollection();
+                const collection = await getMessagesCollection();
                 await collection.insertMany(currentMessages.map((m, i) => ({
                     type: 'message',
                     sender: m.sender,
@@ -112,9 +115,15 @@ You have already analyzed the messages and extracted the following information:
 
 ${basePrompt}
             `, messages
-                )
+                );
 
-                fs.writeFileSync(join(path, folder, 'profile.json'), JSON.stringify(profile, null, 4));
+                (await getProfileCollection()).insertOne({
+                    type: 'profile',
+                    username: participants.find(p => p !== user),
+                    participants: participants,
+                    profile: profile,
+                    messageCount: userMessageCount,
+                });
             }
             console.log(`User ${folder} has ${userMessageCount} messages`);
         } else {

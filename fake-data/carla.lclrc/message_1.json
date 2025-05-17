@@ -1,0 +1,155 @@
+{
+  "participants": [
+    {
+      "name": "carla.lclrc"
+    },
+    {
+      "name": "simon"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "carla.lclrc",
+      "timestamp_ms": 1654281130000,
+      "content": "Hey, do you still have the recipe for your lemon cake?",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "simon",
+      "timestamp_ms": 1654281155000,
+      "content": "Yes! It's super simple, want me to send it?",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "carla.lclrc",
+      "timestamp_ms": 1654281168000,
+      "content": "Yes please 🙏 I want to try it this weekend",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "simon",
+      "timestamp_ms": 1654281183000,
+      "content": "Here it goes:\n- 3 eggs\n- 150g sugar\n- 1 lemon (zest + juice)\n- 100g melted butter\n- 150g flour\nMix it all, bake 35min at 180°C 🍋",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "carla.lclrc",
+      "timestamp_ms": 1654281202000,
+      "content": "Yum! Do you add any icing or leave it plain?",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "simon",
+      "timestamp_ms": 1654281215000,
+      "content": "Sometimes I do a quick glaze with lemon juice + icing sugar on top 🍰",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "carla.lclrc",
+      "timestamp_ms": 1654281229000,
+      "content": "Perfect. I’ll try with the glaze then! Thanks chef 🧑‍🍳",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "simon",
+      "timestamp_ms": 1654281240000,
+      "content": "Haha let me know how it turns out!",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "carla.lclrc",
+      "timestamp_ms": 1654284000000,
+      "content": "It’s in the oven 🔥 smells amazing already",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "simon",
+      "timestamp_ms": 1654284025000,
+      "content": "Yesss 😍 send a pic when it’s done!",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "carla.lclrc",
+      "timestamp_ms": 1654285000000,
+      "content": "Just out of the oven and glazed! 🍋✨ it looks beautiful",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "simon",
+      "timestamp_ms": 1654285023000,
+      "content": "👏👏👏 proud of you! Is it fluffy inside?",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "carla.lclrc",
+      "timestamp_ms": 1654285045000,
+      "content": "Super moist actually! The lemon flavor is so good",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "simon",
+      "timestamp_ms": 1654285060000,
+      "content": "Haha I knew you'd love it. It’s my secret weapon 💪",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "carla.lclrc",
+      "timestamp_ms": 1654285078000,
+      "content": "Definitely keeping this one in my go-to recipes",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "simon",
+      "timestamp_ms": 1654285091000,
+      "content": "Glad I could contribute 😄 next time: chocolate fondant?",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "carla.lclrc",
+      "timestamp_ms": 1654285112000,
+      "content": "Omg yes! Please send me that recipe too 😍",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "simon",
+      "timestamp_ms": 1654285130000,
+      "content": "Coming soon in your inbox 🍫🧁",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "carla.lclrc",
+      "timestamp_ms": 1654285145000,
+      "content": "You're the best, thank you!",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "simon",
+      "timestamp_ms": 1654285160000,
+      "content": "Anytime! Happy baking 🧁🎉",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ],
+  "title": "Carla",
+  "is_still_participant": true,
+  "magic_words": []
+}

@@ -2,10 +2,22 @@ import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
 
-import { getCollection } from './mongo-client.js'
+import { getCollection, getMessagesCollection, getProfileCollection } from './mongo-client.js'
 import { getEmbedding } from './embedding.js'
 
 const app = express()
+
+app.get('/initial', async (req, res) => {
+
+  const collection = await getProfileCollection();
+
+  const topN = 10;
+  const profiles = await collection.find({})
+  .sort({ "messageCount": -1 })
+  .limit(topN).toArray();
+  console.log('Profiles:', profiles);
+
+});
 
 app.get('/query', async (req, res) => {
   const { text } = req.query;
@@ -13,7 +25,7 @@ app.get('/query', async (req, res) => {
   console.log('Received text:', text);
   const [embedding] = await getEmbedding([text]);
 
-  const collection = await getCollection();
+  const collection = await getMessagesCollection();
   
   const agg = [
         {

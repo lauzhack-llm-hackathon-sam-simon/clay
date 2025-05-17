@@ -8,11 +8,20 @@ const collectionName = 'messages';
 
 let connected = false;
 
-export const getCollection = async () => {
+export const getMessagesCollection = async () => {
     if (!connected) {
         await client.connect();
         connected = true;
     }
     const db = client.db(dbName);
     return db.collection(collectionName);
+}
+
+export const getProfileCollection = async () => {
+    if (!connected) {
+        await client.connect();
+        connected = true;
+    }
+    const db = client.db(dbName);
+    return db.collection('profiles');
 }
