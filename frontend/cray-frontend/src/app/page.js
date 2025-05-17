@@ -73,7 +73,7 @@ export default function Home() {
             <PixiCanvas profiles={profiles} askForProfileDetails={askForProfileDetails} />
           </SplitterPanel>
           <SplitterPanel className="flex flex-col justify-between p-3" size={30}>
-            <div className="space-y-3 overflow-y-auto">
+            <div className="space-y-3">
               {messages.map((message, index) => {
                 const isYou = message.sender === "You";
 
@@ -99,7 +99,7 @@ export default function Home() {
             <div className="pt-3">
               <div className="p-inputgroup w-full">
                 <InputText placeholder="Talk to CLAY..." className="w-full" value={queryContent} onChange={(e) => setQueryContent(e.target.value)} />
-                <Button icon="pi pi-send" className="p-button-warning w-auto" onClick={() => {
+                <Button icon="pi pi-send" className="p-button w-auto" onClick={() => {
                   setMessages(messages => [...messages, { sender: "You", text: queryContent, metadata: null }]);
                   query(queryContent);
                   setQueryContent("");
