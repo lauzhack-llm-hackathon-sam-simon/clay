@@ -1,0 +1,79 @@
+{
+    "participants": [
+      {
+        "name": "saammmlee"
+      },
+      {
+        "name": "simon"
+      }
+    ],
+    "messages": [
+      {
+        "sender_name": "saammmlee",
+        "timestamp_ms": 1675531000000,
+        "content": "Hey, do you have any plans tomorrow? :)",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675531030000,
+        "content": "Not really. Why, are you thinking of something? 👀",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "saammmlee",
+        "timestamp_ms": 1675531060000,
+        "content": "Maybe a little study session? Computer Systems is slowly killing me 😅",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675531100000,
+        "content": "Haha same here. Sunday at the library, then? We can suffer together 💀",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "saammmlee",
+        "timestamp_ms": 1675531140000,
+        "content": "Deal. But if we survive, coffee's on you ☕😉",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675531180000,
+        "content": "Only if you tell me what your favorite food is. Gotta plan post-study rewards, right?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "saammmlee",
+        "timestamp_ms": 1675531220000,
+        "content": "Hmm tough one... probably ramen or sushi. You?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675531250000,
+        "content": "Sushi wins. Maybe next weekend we should test every sushi place in Lausanne 😄",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "saammmlee",
+        "timestamp_ms": 1675531280000,
+        "content": "You're dangerous. I might actually take you up on that 😅",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      }
+    ],
+    "title": "saammmlee",
+    "is_still_participant": true,
+    "magic_words": []
+  }
+  

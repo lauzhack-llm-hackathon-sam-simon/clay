@@ -1,0 +1,65 @@
+{
+    "participants": [
+      {
+        "name": "hugo_______silvie"
+      },
+      {
+        "name": "simon"
+      }
+    ],
+    "messages": [
+      {
+        "sender_name": "hugo_______silvie",
+        "timestamp_ms": 1675530000000,
+        "content": "Guess what — my graduation ceremony is on June 12th 🎓",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675530040000,
+        "content": "No way! That came so fast. Congrats man 👏 Proud of you!",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "hugo_______silvie",
+        "timestamp_ms": 1675530080000,
+        "content": "Thanks 😄 It still feels surreal. Not sure what to do with all the free time after.",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675530125000,
+        "content": "Let me guess… binge every series you missed during the semester? 😂",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "hugo_______silvie",
+        "timestamp_ms": 1675530160000,
+        "content": "Haha exactly. And maybe sleep for a week straight 😴",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675530200000,
+        "content": "Deserved. You better show up to the ceremony in a cool cap though. Promise?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "hugo_______silvie",
+        "timestamp_ms": 1675530230000,
+        "content": "Promise. Gonna bedazzle it with LEDs and chaos 🔥",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      }
+    ],
+    "title": "hugo_______silvie",
+    "is_still_participant": true,
+    "magic_words": []
+  }
+  

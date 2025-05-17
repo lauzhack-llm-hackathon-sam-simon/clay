@@ -1,0 +1,51 @@
+{
+    "participants": [
+      {
+        "name": "wahbsaaidi"
+      },
+      {
+        "name": "simon"
+      }
+    ],
+    "messages": [
+      {
+        "sender_name": "wahbsaaidi",
+        "timestamp_ms": 1675532000000,
+        "content": "Was that you in the library earlier? Looked like you were deep in a chat 😏",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675532040000,
+        "content": "Haha yeah that was me. Study session with someone… important 😅",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "wahbsaaidi",
+        "timestamp_ms": 1675532080000,
+        "content": "Ooooh 👀 Should I mind my business or ask for details?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675532110000,
+        "content": "Let’s just say... it wasn’t just about Computer Systems 😉",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "wahbsaaidi",
+        "timestamp_ms": 1675532140000,
+        "content": "Ahhh say less. Next time I’ll pretend I didn’t see anything 😂",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      }
+    ],
+    "title": "wahbsaaidi",
+    "is_still_participant": true,
+    "magic_words": []
+  }
+  

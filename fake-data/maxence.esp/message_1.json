@@ -1,0 +1,58 @@
+{
+    "participants": [
+      {
+        "name": "maxence.esp"
+      },
+      {
+        "name": "simon"
+      }
+    ],
+    "messages": [
+      {
+        "sender_name": "maxence.esp",
+        "timestamp_ms": 1675520000000,
+        "content": "Hey, did you finish the lab report for Computer Systems?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675520035000,
+        "content": "Not yet 😅 I got stuck on the cache simulation part. You?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "maxence.esp",
+        "timestamp_ms": 1675520060000,
+        "content": "Yeah, finally figured it out this morning. Want to hop on a call later?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675520090000,
+        "content": "That'd be amazing. After 5 okay for you?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "maxence.esp",
+        "timestamp_ms": 1675520120000,
+        "content": "Perfect. Let’s get this thing done before the deadline crushes us again 😂",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1675520150000,
+        "content": "Agreed. Team 'Last Minute But Efficient' strikes again!",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      }
+    ],
+    "title": "maxence.esp",
+    "is_still_participant": true,
+    "magic_words": []
+  }
+  
