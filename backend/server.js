@@ -2,32 +2,37 @@ import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
 
-import { getCollection, getMessagesCollection, getProfileCollection } from './mongo-client.js'
+import { getMessagesCollection, getProfileCollection } from './mongo-client.js'
 import { getEmbedding } from './embedding.js'
+import cors from 'cors';
+import Together from 'together-ai'
 
 const app = express()
+app.use(cors());
 
 app.get('/initial', async (req, res) => {
 
-  const collection = await getProfileCollection();
+    const collection = await getProfileCollection();
 
-  const topN = 10;
-  const profiles = await collection.find({})
-  .sort({ "messageCount": -1 })
-  .limit(topN).toArray();
-  console.log('Profiles:', profiles);
+    const topN = 10;
+    const profiles = await collection.find({})
+        .sort({ "messageCount": -1 })
+        .limit(2).toArray();
+    console.log('Profiles:', profiles);
+
+    res.json({ data: profiles });
 
 });
 
 app.get('/query', async (req, res) => {
-  const { text } = req.query;
-  
-  console.log('Received text:', text);
-  const [embedding] = await getEmbedding([text]);
+    const { text } = req.query;
 
-  const collection = await getMessagesCollection();
-  
-  const agg = [
+    console.log('Received text:', text);
+    const [embedding] = await getEmbedding([text]);
+
+    const collection = await getMessagesCollection();
+
+    const agg = [
         {
             '$vectorSearch': {
                 'index': 'vector_index_2',
@@ -50,14 +55,47 @@ app.get('/query', async (req, res) => {
 
     const result = collection.aggregate(agg);
 
-    console.log('Results:');
+    const usernames = new Set();
+    const messages = [];
     for await (const doc of result) {
         console.log(doc);
+        usernames.add(doc.sender);
+        messages.push(doc);
     }
 
-  res.json({ message: 'Query received', embedding });
+    const prompt = `
+You are a social media analyst. You have to analyze the following messages and answer the question.
 
-  console.log('end');
+Question: ${text}
+
+Messages:
+${messages.map(m => `${m.sender}: ${m.message}`).join('\n')}
+`
+
+    const together = new Together();
+    const response = await together.chat.completions.create({
+        model: "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo",
+        messages: [
+            {
+                role: 'user',
+                content: prompt
+            },
+        ],
+        max_tokens: 1000,
+        temperature: 1
+    })
+    const responseText = response.choices[0].message.content;
+
+    console.log(Array.from(usernames))
+
+    const profilesOfActors = await (await getProfileCollection()).find({ username: { $in: Array.from(usernames) } }).toArray();
+    console.log('Profiles of actors:', profilesOfActors);
+
+    const metadata = `Found ${messages.length} relevant messages and photos from ${Array.from(usernames).length} users.`;
+
+    res.json({ message: 'Query received', newProfiles: profilesOfActors, metadata, response: responseText });
+
+    console.log('end');
 })
 
 app.listen(4000)
