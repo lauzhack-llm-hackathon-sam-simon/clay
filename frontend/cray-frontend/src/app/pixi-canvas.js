@@ -26,31 +26,17 @@ const PixiCanvas = ({ profiles, askForProfileDetails }) => {
 
     const texture = await PIXI.Assets.load(`http://localhost:3333/${element.username}.jpg`)
 
-    const radius = 300;
+    const radius = 200;
     let x, y, tries = 0, overlaps;
     const maxTries = 100;
 
     const centerX = viewport.worldWidth / 2;
     const centerY = viewport.worldHeight / 2;
 
-    const angle = (loadedUsernames.length * (360 / 10)) * (Math.PI / 180); // 10개의 프로필을 기준으로
-    const distance = 500;
-
-    do {
-      const centerX = viewport.worldWidth / 2;
-      const centerY = viewport.worldHeight / 2;
-      const spread = 500; // how far from the center (smaller = more centered)
-
-      x = centerX + (Math.random() - 0.5) * spread;
-      y = centerY + (Math.random() - 0.5) * spread;
-      // overlaps = placedPositions.some(p => {
-      //   const dx = x - p.x;
-      //   const dy = y - p.y;
-      //   // only consider overlapping when the two circles actually intersect
-      //   return Math.hypot(dx, dy) < radius + p.radius;
-      // });
-      // tries++;
-    } while (overlaps && tries < maxTries);
+    const angle = Math.random() * Math.PI * 2;
+  
+    x = centerX + Math.cos(angle) * radius;
+    y = centerY + Math.sin(angle) * radius;
 
     if (tries === maxTries) {
       console.warn('Could not place circle without overlap after', maxTries, 'tries');
@@ -162,6 +148,11 @@ const PixiCanvas = ({ profiles, askForProfileDetails }) => {
       pixiReadyRef.current = true;
       setLoadedUsernames([]);
       createConnectionsIfReady(); 
+
+      // zoom
+      viewport.setZoom(1.5);
+      // set at center
+      viewport.moveCenter(centerX, centerY);
     }
     loadPixi();
   }, []);
