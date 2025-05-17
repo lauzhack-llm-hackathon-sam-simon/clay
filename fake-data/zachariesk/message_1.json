@@ -1,0 +1,49 @@
+{
+    "participants": [
+      {
+        "name": "zachariesk"
+      },
+      {
+        "name": "simon"
+      }
+    ],
+    "messages": [
+      {
+        "sender_name": "zachariesk",
+        "timestamp_ms": 1689400000000,
+        "content": "Went to this bakery in Zurich called Juliette — their croissant is insane!",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "zachariesk",
+        "timestamp_ms": 1689400020000,
+        "photos": [
+          {
+            "uri": "your_instagram_activity/messages/inbox/zachariesk_1234567890/photos/12345.jpg",
+            "creation_timestamp": 1689399980
+          }
+        ],
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "simon",
+        "timestamp_ms": 1689400045000,
+        "content": "Whoa that looks perfect! Where exactly is this place?",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      },
+      {
+        "sender_name": "zachariesk",
+        "timestamp_ms": 1689400060000,
+        "content": "It's near Bellevue. Super small place but totally worth checking out!",
+        "is_geoblocked_for_viewer": false,
+        "is_unsent_image_by_messenger_kid_parent": false
+      }
+    ],
+    "title": "Zacharie",
+    "is_still_participant": true,
+    "magic_words": []
+  }
+  
