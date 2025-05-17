@@ -4,11 +4,13 @@ import PixiCanvas from "./pixi-canvas";
 
 export default function Home() {
   return (
-    <Splitter style={{ height: '90vh' }}>
-        <SplitterPanel className="flex align-items-center justify-content-center" size={70}>
-          <PixiCanvas />
-        </SplitterPanel>
-        <SplitterPanel className="flex align-items-center justify-content-center" size={30}>Panel 2</SplitterPanel>
-    </Splitter>
+    <div>
+      <Splitter style={{ height: '100vh' }}>
+          <SplitterPanel className="flex align-items-center justify-content-center" size={70}>
+            <PixiCanvas />
+          </SplitterPanel>
+          <SplitterPanel className="flex align-items-center justify-content-center" size={30}>Panel 2</SplitterPanel>
+      </Splitter>
+    </div>
   );
 }
