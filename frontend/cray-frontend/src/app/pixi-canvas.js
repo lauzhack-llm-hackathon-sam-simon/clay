@@ -58,8 +58,8 @@ const PixiCanvas = ({ profiles }) => {
       .moveTo(youCircle.x, youCircle.y)
       .lineTo(circle.x, circle.y)
       .stroke({
-        color: 0x000000,
-        width: 2,
+        color: 0x237cff,
+        width: 1.5,
       });
 
     viewport.addChild(connection);
@@ -102,7 +102,7 @@ const PixiCanvas = ({ profiles }) => {
 
       await app.init({
         resizeTo: pixiContainerRef.current,
-        backgroundColor: 0xFFFFFF,
+        backgroundColor: 0xf1efed,
       });
 
       pixiContainerRef.current.appendChild(app.canvas);
