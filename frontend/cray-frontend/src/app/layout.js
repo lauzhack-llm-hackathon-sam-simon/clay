@@ -1,5 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import "primereact/resources/themes/lara-dark-indigo/theme.css"; // theme
+import "primereact/resources/themes/bootstrap4-light-blue/theme.css"; // theme
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,6 +22,10 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div className="flex flex-column">
+          <h1>Clay</h1>
+          <h2>Chats and Relationships Analyzer (for You :) - Powered by Together.ai</h2>
+        </div>
         {children}
       </body>
     </html>
