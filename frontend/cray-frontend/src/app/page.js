@@ -19,8 +19,8 @@ export default function Home() {
     if (messages.length == 0) {
       const initialMessages = [
         {
-          sender: "Clay",
-          text: "Hey there! I'm Clay, your personal chats and network analyst 🤖\n\nI have analyzed your messages, photos and voice messages.",
+          sender: "CLAY",
+          text: "Hey there! I'm CLAY, your personal chats and network analyst 🤖\n\nI have analyzed your messages, photos and voice messages.",
         }
       ];
       setMessages(initialMessages);
@@ -48,7 +48,7 @@ export default function Home() {
       console.log('Query result:', data);
       const newProfiles = data.newProfiles;
       setProfiles(profiles => [...profiles, ...newProfiles]);
-      setMessages(messages => [...messages, { sender: "Clay", text: data.response, metadata: data.metadata }]);
+      setMessages(messages => [...messages, { sender: "CLAY", text: data.response, metadata: data.metadata }]);
     } catch (error) {
       console.error('Error querying:', error);
     }
@@ -59,7 +59,7 @@ export default function Home() {
     const profile = newProfiles.find(p => p.username === username);
     console.log('Found profile:', profile);
     setMessages(messages => [...messages, {
-      sender: "Clay", text: `
+      sender: "CLAY", text: `
       ${profile.username}, ${profile.profile.notableMemories.join('\n')}
       `, metadata: null
     }]);
@@ -73,7 +73,7 @@ export default function Home() {
             <PixiCanvas profiles={profiles} askForProfileDetails={askForProfileDetails} />
           </SplitterPanel>
           <SplitterPanel className="flex flex-col justify-between p-3" size={30}>
-            <div className="space-y-3 overflow-y-auto">
+            <div className="space-y-3">
               {messages.map((message, index) => {
                 const isYou = message.sender === "You";
 
@@ -98,8 +98,8 @@ export default function Home() {
             </div>
             <div className="pt-3">
               <div className="p-inputgroup w-full">
-                <InputText placeholder="Talk to Clay..." className="w-full" value={queryContent} onChange={(e) => setQueryContent(e.target.value)} />
-                <Button icon="pi pi-send" className="p-button-warning w-auto" onClick={() => {
+                <InputText placeholder="Talk to CLAY..." className="w-full" value={queryContent} onChange={(e) => setQueryContent(e.target.value)} />
+                <Button icon="pi pi-send" className="p-button w-auto" onClick={() => {
                   setMessages(messages => [...messages, { sender: "You", text: queryContent, metadata: null }]);
                   query(queryContent);
                   setQueryContent("");
