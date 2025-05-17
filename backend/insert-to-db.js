@@ -6,22 +6,19 @@ dotenv.config();
 import fs from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
-import { MongoClient } from 'mongodb';
-import { promptOnManyMessages } from './prompt-on-many-msgs.js';
-
-const client = new MongoClient(process.env.MONGODB_URI);
-const dbName = 'real_chat_data';
-const collectionName = 'messages';
+import { promptOnManyMessages } from './split-n-merge.js';
+import { getProfileCollection, getMessagesCollection } from './mongo-client.js';
+import { getEmbedding } from './embedding.js';
 
 const readFileAsync = promisify(fs.readFile);
 
 (async () => {
 
-    await client.connect();
-    const db = client.db(dbName);
-    const collection = db.collection(collectionName);
+    const messagesCollection = await getMessagesCollection();
+    await messagesCollection.deleteMany({});
 
-    const path = '/Users/poca/Documents/Github/cray/data/your_instagram_activity/messages/inbox';
+    const path = '/Users/poca/Documents/Github/cray/data_cleanedup/your_instagram_activity/messages/inbox';
+    let user = "simon";
     const folders = fs.readdirSync(path);
 
     let count = 0;
@@ -29,6 +26,7 @@ const readFileAsync = promisify(fs.readFile);
 
     for (const folder of folders) {
         if (folder.startsWith('instagramuser')) continue;
+        // todo debug
         let idx = 1;
         let userMessageCount = 0;
         let messages = [];
@@ -48,14 +46,24 @@ const readFileAsync = promisify(fs.readFile);
                     timestamp: m.timestamp_ms,
                 }));
             if (currentMessages.length > 0) {
-                // await collection.insertMany(currentMessages.map(m => ({
-                //     type: 'message',
-                //     sender: m.sender,
-                //     timestamp: m.timestamp,
-                //     message: m.text,
-                // })));
+                const chunksOf2048 = [];
+                for (let i = 0; i < currentMessages.length; i += 2048) {
+                    chunksOf2048.push(currentMessages.slice(i, i + 2048));
+                }
+                console.log(`Processing ${chunksOf2048.length} chunks of 2048 messages`);
+                const embeddings = await Promise.all(chunksOf2048.map(chunk => getEmbedding(chunk.map(m => m.text))));
+                console.log(`Got ${embeddings.length} embeddings`);
+                const collection = await getMessagesCollection();
+                await collection.insertMany(currentMessages.map((m, i) => ({
+                    type: 'message',
+                    sender: m.sender,
+                    timestamp: m.timestamp,
+                    message: m.text,
+                    embedding: embeddings[Math.floor(i / 2048)][i % 2048],
+                })));
             }
             messages = messages.concat(currentMessages);
+            console.log(`User ${folder} has ${currentMessages.length} messages`);
             if (participants.length > 2) {
                 console.log("Skipping group chat with participants:", participants.length);
                 continue;
@@ -66,29 +74,38 @@ const readFileAsync = promisify(fs.readFile);
 
         if (userMessageCount > 0) {
             if (participants.length <= 2) {
-                const profile = await promptOnManyMessages(
-                    `
-You are analyzing a conversation between the following people: ${participants.join(",")}.
-
-Here are some chat messages:
-{messages}
-
+                const basePrompt = `
 Extract the following information in JSON format:
 
 {
-    "participants": [...],
+    "participants": [...], // example ["Alice", "Bob"]
     "tone": "...",
-    "topics": [...],
-    "firstMessageDate": "...",
-    "lastMessageDate": "...",
-    "frequentEmojis": [...],
+    "topics": [...], // example ["travel", "food", ...]
+    "status", // one of "stale", "critical", "endangered", "stable", "healthy"
     "notableMemories": [
-        "Short summary of one memorable moment",
+        "In January 2024, you laughed together when you both misheard the same word during a late-night call.",
         ...
     ]
 }
 
-The "notableMemories" field should contain exactly the 5 most memorable or meaningful messages (in summary form).
+The "notableMemories" field should contain exactly the 5 most memorable or meaningful moments (in summary form).
+Avoid generic facts. Make it feel personal and evocative.
+"category" should be one of the following: "friendship", "romantic", "family", "study", "business", "other".
+Choose the most appropriate one.
+
+status depends on the quality of the conversation, and the frequency of messages exchanged.
+
+You are sending this data to ${user}, so use "you" to refer to them, and "them" to refer to the other person.
+                `;
+                const profile = await promptOnManyMessages(
+                    `
+You are analyzing a conversation between the following people: ${participants.join(",")}.
+user is ${user}.
+
+Here are some chat messages:
+{messages}
+
+${basePrompt}
             `,
                     `
 You are analyzing a conversation between the following people: ${participants.join(", ")}.
@@ -96,28 +113,17 @@ You are analyzing a conversation between the following people: ${participants.jo
 You have already analyzed the messages and extracted the following information:
 {parts}
 
-Merge the following information in one JSON format:
-
-{
-    "participants": [...],
-    "category": "",
-    "tone": "...",
-    "topics": [...],
-    "firstMessageDate": "...",
-    "lastMessageDate": "...",
-    "frequentEmojis": [...],
-    "notableMemories": [
-        "Short summary of one memorable moment",
-        ...
-    ]
-}
-The "notableMemories" field should contain exactly the 5 most memorable or meaningful messages (in summary form).
-"category" should be one of the following: "friendship", "romantic", "family", "study", "business", "other".
-Choose the most appropriate one.
+${basePrompt}
             `, messages
-                )
+                );
 
-                fs.writeFileSync(join(path, folder, 'profile.json'), JSON.stringify(profile, null, 4));
+                (await getProfileCollection()).insertOne({
+                    type: 'profile',
+                    username: participants.find(p => p !== user),
+                    participants: participants,
+                    profile: profile,
+                    messageCount: userMessageCount,
+                });
             }
             console.log(`User ${folder} has ${userMessageCount} messages`);
         } else {
