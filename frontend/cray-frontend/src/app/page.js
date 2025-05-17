@@ -14,7 +14,6 @@ export default function Home() {
   const [queryContent, setQueryContent] = useState("");
   const [messages, setMessages] = useState([]);
 
-
   useEffect(() => {
 
     if (messages.length == 0) {
@@ -32,7 +31,7 @@ export default function Home() {
         const response = await fetch('http://localhost:4000/initial');
         const data = await response.json();
         console.log('Fetched profiles:', data.data);
-        setProfiles(data.data);
+        setProfiles(prev => [...prev, ...data.data]);
       } catch (error) {
         console.error('Error fetching profiles:', error);
       }
@@ -55,12 +54,17 @@ export default function Home() {
     }
   }
 
-  const askForProfileDetails = async (username) => {
-    const profile = profiles.find(p => p.username === username);
-    setMessages(messages => [...messages, { sender: "Clay", text: `
-      ${profile.username}, ${profile.notableMemories.join('\n')}
-      `, metadata: null }]);
+  const askForProfileDetails = async (username, newProfiles) => {
+    console.log('Asking for profile details:', newProfiles);
+    const profile = newProfiles.find(p => p.username === username);
+    console.log('Found profile:', profile);
+    setMessages(messages => [...messages, {
+      sender: "Clay", text: `
+      ${profile.username}, ${profile.profile.notableMemories.join('\n')}
+      `, metadata: null
+    }]);
   }
+
 
   return (
     <div>

@@ -8,14 +8,16 @@ let viewport;
 let youCircle;
 const placedPositions = [];
 
-const PixiCanvas = ({ profiles }) => {
+const PixiCanvas = ({ profiles, askForProfileDetails }) => {
   const pixiContainerRef = useRef(null);
   const pixiReadyRef = useRef(false);
 
   const [loadedUsernames, setLoadedUsernames] = useState([]);
 
-  const createNewConnection = async (element) => {
+  const profilesRef = useRef([]);
 
+  const createNewConnection = async (element) => {
+  
     if (loadedUsernames.includes(element.username)) {
       console.warn('Already loaded this username:', element.username);
       return;
@@ -54,6 +56,15 @@ const PixiCanvas = ({ profiles }) => {
     circle.x = x; circle.y = y;
     circle.scale.set(0.1);
 
+    circle.eventMode = 'static';
+    circle.cursor = 'pointer';
+
+    circle.on('pointerdown', () => {
+      console.log('Circle clicked:', element.username);
+      console.log('Asking for profile details calling:', profilesRef.current);
+      askForProfileDetails(element.username, profilesRef.current);
+    });
+
     const connection = new PIXI.Graphics()
       .moveTo(youCircle.x, youCircle.y)
       .lineTo(circle.x, circle.y)
@@ -69,8 +80,6 @@ const PixiCanvas = ({ profiles }) => {
     placedPositions.push({ x, y, radius });
 
   };
-
-  const profilesRef = useRef([]);
 
   useEffect(() => {
     profilesRef.current = profiles;
