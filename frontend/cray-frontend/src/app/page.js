@@ -70,16 +70,27 @@ export default function Home() {
           </SplitterPanel>
           <SplitterPanel className="flex flex-col justify-between p-3" size={30}>
             <div className="space-y-3 overflow-y-auto">
-              {messages.map((message, index) => (
-                <Card title={message.sender} key={index} className="w-full">
-                  {message.metadata && (
-                    <p className="text-sm text-gray-500 mb-2">
-                      {message.metadata}
-                    </p>
-                  )}
-                  <p className="m-0">{message.text}</p>
-                </Card>
-              ))}
+              {messages.map((message, index) => {
+                const isYou = message.sender === "You";
+
+                return (
+                  <div
+                    key={index}
+                    className={`flex ${isYou ? "justify-end" : "justify-start"}`}
+                  >
+                    <div
+                      className={`
+                        max-w-[80%] px-4 py-2 rounded-2xl text-sm whitespace-pre-line
+                        ${isYou
+                          ? "bg-[#237cff] text-white rounded-br-none"
+                          : "bg-blue-100 text-black rounded-bl-none"}
+                      `}
+                    >
+                      {message.text}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
             <div className="pt-3">
               <div className="p-inputgroup w-full">
