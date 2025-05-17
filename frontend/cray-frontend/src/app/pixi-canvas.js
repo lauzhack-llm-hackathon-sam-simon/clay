@@ -29,6 +29,13 @@ const PixiCanvas = ({ profiles, askForProfileDetails }) => {
     const radius = 300;
     let x, y, tries = 0, overlaps;
     const maxTries = 100;
+
+    const centerX = viewport.worldWidth / 2;
+    const centerY = viewport.worldHeight / 2;
+
+    const angle = (loadedUsernames.length * (360 / 10)) * (Math.PI / 180); // 10개의 프로필을 기준으로
+    const distance = 500;
+
     do {
       const centerX = viewport.worldWidth / 2;
       const centerY = viewport.worldHeight / 2;

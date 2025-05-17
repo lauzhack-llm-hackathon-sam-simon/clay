@@ -90,6 +90,11 @@ export default function Home() {
                           : "bg-blue-100 text-black rounded-bl-none"}
                       `}
                     >
+                      {message.metadata && (
+                        <div className="text-xs text-gray-500 mb-1">
+                          {message.metadata}
+                        </div>
+                      )}
                       {message.text}
                     </div>
                   </div>
