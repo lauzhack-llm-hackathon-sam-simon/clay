@@ -7,17 +7,16 @@ import { Viewport } from 'pixi-viewport';
 let viewport;
 let youCircle;
 const placedPositions = [];
+const circleObjects = [];
 
 const PixiCanvas = ({ profiles, askForProfileDetails }) => {
   const pixiContainerRef = useRef(null);
   const pixiReadyRef = useRef(false);
 
   const [loadedUsernames, setLoadedUsernames] = useState([]);
-
   const profilesRef = useRef([]);
 
   const createNewConnection = async (element) => {
-  
     if (loadedUsernames.includes(element.username)) {
       console.warn('Already loaded this username:', element.username);
       return;
@@ -27,41 +26,25 @@ const PixiCanvas = ({ profiles, askForProfileDetails }) => {
     const texture = await PIXI.Assets.load(`http://localhost:3333/${element.username}.jpg`)
 
     const radius = 300;
-    let x, y, tries = 0, overlaps;
-    const maxTries = 100;
-
     const centerX = viewport.worldWidth / 2;
     const centerY = viewport.worldHeight / 2;
+    const angle = ((loadedUsernames.length + 5) * (360 / 10)) * (Math.PI / 180);
 
-    const angle = (loadedUsernames.length * (360 / 10)) * (Math.PI / 180); // 10개의 프로필을 기준으로
-    const distance = 500;
+    const distance = 200 + Math.random() * 200;
+    const rotationSpeed = (Math.random() < 0.5 ? -1 : 1) * (0.0005 + Math.random() * 0.001);
 
-    do {
-      const centerX = viewport.worldWidth / 2;
-      const centerY = viewport.worldHeight / 2;
-      const spread = 500; // how far from the center (smaller = more centered)
+    const x = centerX + Math.cos(angle) * distance;
+    const y = centerY + Math.sin(angle) * distance;
 
-      x = centerX + (Math.random() - 0.5) * spread;
-      y = centerY + (Math.random() - 0.5) * spread;
-      // overlaps = placedPositions.some(p => {
-      //   const dx = x - p.x;
-      //   const dy = y - p.y;
-      //   // only consider overlapping when the two circles actually intersect
-      //   return Math.hypot(dx, dy) < radius + p.radius;
-      // });
-      // tries++;
-    } while (overlaps && tries < maxTries);
-
-    if (tries === maxTries) {
-      console.warn('Could not place circle without overlap after', maxTries, 'tries');
-    }
-
-    // draw new circle
     const circle = new PIXI.Graphics()
       .circle(0, 0, radius)
       .fill(texture)
     circle.x = x; circle.y = y;
     circle.scale.set(0.1);
+
+    circle.initialAngle = angle;
+    circle.rotationSpeed = rotationSpeed;
+    circle.distance = distance;
 
     circle.eventMode = 'static';
     circle.cursor = 'pointer';
@@ -84,8 +67,30 @@ const PixiCanvas = ({ profiles, askForProfileDetails }) => {
     viewport.addChild(circle);
     viewport.setChildIndex(connection, 0);
 
+    circleObjects.push({ circle, connection });
     placedPositions.push({ x, y, radius });
+  };
 
+  const updateAnimation = () => {
+    if (!viewport) return;
+
+    const centerX = viewport.worldWidth / 2;
+    const centerY = viewport.worldHeight / 2;
+
+    circleObjects.forEach(({ circle, connection }) => {
+      circle.initialAngle += circle.rotationSpeed;
+
+      circle.x = centerX + Math.cos(circle.initialAngle) * circle.distance;
+      circle.y = centerY + Math.sin(circle.initialAngle) * circle.distance;
+
+      connection.clear();
+      connection
+        .moveTo(youCircle.x, youCircle.y)
+        .lineTo(circle.x, circle.y)
+        .stroke({ color: 0x237cff, width: 1.5 });
+    });
+
+    requestAnimationFrame(updateAnimation);
   };
 
   useEffect(() => {
@@ -101,18 +106,6 @@ const PixiCanvas = ({ profiles, askForProfileDetails }) => {
   };
 
   useEffect(() => {
-
-    const randomArray = (length) => {
-      const arr = [];
-      for (let i = 0; i < length; i++) {
-        arr.push({
-          weight: Math.floor(Math.random() * 255),
-          category: Math.floor(Math.random() * 5) + 1,
-        });
-      }
-      return arr;
-    }
-
     async function loadPixi() {
       const app = new PIXI.Application();
 
@@ -132,36 +125,41 @@ const PixiCanvas = ({ profiles, askForProfileDetails }) => {
       });
 
       viewport = viewportContainer;
-
-      // add the viewport to the stage
       app.stage.addChild(viewport);
-
-      // activate plugins
       viewport.drag().pinch().wheel();
 
       const youTexture = await PIXI.Assets.load("http://localhost:3333/smn_lfrt.jpg");
 
-      // Define center
-      const centerX = app.screen.width / 2;
-      const centerY = app.screen.height / 2;
+      const centerX = viewport.worldWidth / 2;
+      const centerY = viewport.worldHeight / 2;
 
-      youCircle = new PIXI.Graphics()
-        .circle(0, 0, 50)
-        .fill(youTexture);
+      youCircle = PIXI.Sprite.from(youTexture);
+      youCircle.width = 100;
+      youCircle.height = 100;
+      youCircle.anchor.set(0.5); // 중심 정렬
       youCircle.x = centerX;
       youCircle.y = centerY;
 
+      const circleMask = new PIXI.Graphics()
+      .circle(0, 0, 50)  // 반지름은 Sprite 크기 절반
+      .fill(0xffffff)
+      circleMask.x = youCircle.x;
+      circleMask.y = youCircle.y;
+
+      // 3. 마스크 적용
+      youCircle.mask = circleMask;
+
+      // 4. 둘 다 씬에 추가
+      viewport.addChild(circleMask);
       viewport.addChild(youCircle);
 
+      viewport.addChild(youCircle);
       placedPositions.push({ x: youCircle.x, y: youCircle.y, radius: 50 });
 
-      profiles.forEach((profile) => {
-        createNewConnection(profile);
-      });
-
       pixiReadyRef.current = true;
-      setLoadedUsernames([]);
+      // setLoadedUsernames([]);
       createConnectionsIfReady(); 
+      updateAnimation();
     }
     loadPixi();
   }, []);
