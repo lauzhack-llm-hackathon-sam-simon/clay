@@ -1,0 +1,21 @@
+Extract the following information in JSON format:
+
+{
+    "participants": [...], // example ["Alice", "Bob"]
+    "tone": "...",
+    "topics": [...], // example ["travel", "food", ...]
+    "status", // one of "stale", "critical", "endangered", "stable", "healthy"
+    "notableMemories": [
+        "In January 2024, you laughed together when you both misheard the same word during a late-night call.",
+        ...
+    ]
+}
+
+The "notableMemories" field should contain exactly the 5 most memorable or meaningful moments (in summary form).
+Avoid generic facts. Make it feel personal and evocative.
+"category" should be one of the following: "friendship", "romantic", "family", "study", "business", "other".
+Choose the most appropriate one.
+
+status depends on the quality of the conversation, and the frequency of messages exchanged.
+
+You are sending this data to ${user}, so use "you" to refer to them, and "them" to refer to the other person.

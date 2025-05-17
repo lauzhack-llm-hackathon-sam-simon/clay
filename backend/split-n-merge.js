@@ -34,8 +34,6 @@ export const promptOnManyMessages = async (prompt, mergingPrompt, messages) => {
         chunks.push(chunk);
     }
 
-    console.log('Chunks:', chunks.length);
-
     const results = [];
     for (const chunk of chunks) {
         const response = await callWithRetry(() =>
@@ -54,10 +52,9 @@ export const promptOnManyMessages = async (prompt, mergingPrompt, messages) => {
                 }
             })
         );
-        console.log('Response:', response);
         results.push(response.choices[0].message.content);
 
-        console.log("Chunk idx: " + results.length + " / " + chunks.length);
+        console.log("[!] Chunk progress: " + results.length + " / " + chunks.length);
 
         // Add 1 second delay between each request to respect 60 RPM
         await sleep(1000);
