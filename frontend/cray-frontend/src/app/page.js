@@ -6,13 +6,19 @@ import PixiCanvas from "./pixi-canvas";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Home() {
 
   const [profiles, setProfiles] = useState([]);
   const [queryContent, setQueryContent] = useState("");
   const [messages, setMessages] = useState([]);
+
+  const endRef = useRef(null);
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   useEffect(() => {
     if (messages.length == 0) {
@@ -109,6 +115,7 @@ export default function Home() {
                 </div>
               );
             })}
+            <div ref={endRef} />
           </div>
           <div className="pt-3">
             <div className="p-inputgroup w-full">
