@@ -157,7 +157,7 @@ ${basePrompt}
             `, messages
                 );
 
-                if (persistenceEnabled) (await getProfileCollection()).insertOne({
+                if (persistenceEnabled) await (await getProfileCollection()).insertOne({
                     type: 'profile',
                     username: participants.find(p => p !== currentUsername),
                     participants: participants,
