@@ -5,6 +5,7 @@ dotenv.config()
 import { getMessagesCollection, getProfileCollection } from './mongo-client.js'
 import { getEmbedding } from './embedding.js'
 import cors from 'cors';
+import Together from 'together-ai'
 
 const app = express()
 app.use(cors());
@@ -16,7 +17,7 @@ app.get('/initial', async (req, res) => {
     const topN = 10;
     const profiles = await collection.find({})
         .sort({ "messageCount": -1 })
-        .limit(topN).toArray();
+        .limit(2).toArray();
     console.log('Profiles:', profiles);
 
     res.json({ data: profiles });
@@ -54,12 +55,43 @@ app.get('/query', async (req, res) => {
 
     const result = collection.aggregate(agg);
 
-    console.log('Results:');
+    const usernames = new Set();
+    const messages = [];
     for await (const doc of result) {
         console.log(doc);
+        usernames.add(doc.sender);
+        messages.push(doc);
     }
 
-    res.json({ message: 'Query received', embedding });
+    const prompt = `
+You are a social media analyst. You have to analyze the following messages and answer the question.
+
+Question: ${text}
+
+Messages:
+${messages.map(m => `${m.sender}: ${m.message}`).join('\n')}
+`
+
+    const together = new Together();
+    const response = await together.chat.completions.create({
+        model: "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo",
+        messages: [
+            {
+                role: 'user',
+                content: prompt
+            },
+        ],
+        max_tokens: 1000,
+        temperature: 1
+    })
+    const responseText = response.choices[0].message.content;
+
+    console.log(Array.from(usernames))
+
+    const profilesOfActors = await (await getProfileCollection()).find({ username: { $in: Array.from(usernames) } }).toArray();
+    console.log('Profiles of actors:', profilesOfActors);
+
+    res.json({ message: 'Query received', newProfiles: profilesOfActors, response: responseText });
 
     console.log('end');
 })

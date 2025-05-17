@@ -30,13 +30,13 @@ const PixiCanvas = ({ profiles }) => {
     do {
       x = Math.random() * viewport.worldWidth;
       y = Math.random() * viewport.worldHeight;
-      overlaps = placedPositions.some(p => {
-        const dx = x - p.x;
-        const dy = y - p.y;
-        // only consider overlapping when the two circles actually intersect
-        return Math.hypot(dx, dy) < radius + p.radius;
-      });
-      tries++;
+      // overlaps = placedPositions.some(p => {
+      //   const dx = x - p.x;
+      //   const dy = y - p.y;
+      //   // only consider overlapping when the two circles actually intersect
+      //   return Math.hypot(dx, dy) < radius + p.radius;
+      // });
+      // tries++;
     } while (overlaps && tries < maxTries);
 
     if (tries === maxTries) {
