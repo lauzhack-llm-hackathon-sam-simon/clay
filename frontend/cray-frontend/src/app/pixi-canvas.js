@@ -26,10 +26,8 @@ const PixiCanvas = ({ profiles, askForProfileDetails }) => {
     const texture = await PIXI.Assets.load(`http://localhost:3333/${element.username}.jpg`)
 
     const radius = 200;
-    let x, y, tries = 0, overlaps;
     const maxTries = 100;
 
-    const radius = 300;
     const centerX = viewport.worldWidth / 2;
     const centerY = viewport.worldHeight / 2;
     const angle = ((loadedUsernames.length + 5) * (360 / 10)) * (Math.PI / 180);
@@ -39,17 +37,6 @@ const PixiCanvas = ({ profiles, askForProfileDetails }) => {
 
     const x = centerX + Math.cos(angle) * distance;
     const y = centerY + Math.sin(angle) * distance;
-
-
-    const angle = Math.random() * Math.PI * 2;
-  
-    x = centerX + Math.cos(angle) * radius;
-    y = centerY + Math.sin(angle) * radius;
-
-    if (tries === maxTries) {
-      console.warn('Could not place circle without overlap after', maxTries, 'tries');
-    }
-
     // draw new circle
     const circle = new PIXI.Graphics()
       .circle(0, 0, radius)
