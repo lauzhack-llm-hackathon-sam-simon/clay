@@ -59,12 +59,15 @@ app.get('/query', async (req, res) => {
     const messages = [];
     for await (const doc of result) {
         console.log(doc);
+        if (doc.score < 0.7) continue;
         usernames.add(doc.sender);
         messages.push(doc);
     }
 
     const prompt = `
 You are a social media analyst. You have to analyze the following messages and answer the question.
+
+If the answer comes from a photo, please specify that in the answer.
 
 Question: ${text}
 

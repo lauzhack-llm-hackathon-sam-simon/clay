@@ -9,13 +9,17 @@ import { promisify } from 'util';
 import { promptOnManyMessages } from './split-n-merge.js';
 import { getProfileCollection, getMessagesCollection } from './mongo-client.js';
 import { getEmbedding } from './embedding.js';
+import { profile } from 'console';
+import Together from 'together-ai';
 
 const readFileAsync = promisify(fs.readFile);
 
 (async () => {
 
     const messagesCollection = await getMessagesCollection();
+    const profilesCollection = await getProfileCollection();
     await messagesCollection.deleteMany({});
+    await profilesCollection.deleteMany({});
 
     const path = '/home/poca/Documents/Github/cray/fake-data/';
     let user = "simon";
@@ -26,6 +30,7 @@ const readFileAsync = promisify(fs.readFile);
 
     for (const folder of folders) {
         if (folder.startsWith('instagramuser')) continue;
+        //if (!folder.startsWith('z')) continue;
         // todo debug
         let idx = 1;
         let userMessageCount = 0;
@@ -62,6 +67,57 @@ const readFileAsync = promisify(fs.readFile);
                     embedding: embeddings[Math.floor(i / 2048)][i % 2048],
                 })));
             }
+            const photoMessages = jsonData.messages.filter(m => m.photos?.length > 0);
+            if (photoMessages.length > 0) {
+                const photoContents = await Promise.all(photoMessages.map(async (m) => {
+                    const photo = m.photos[0];
+                    const photoPath = join(path, folder, photo.uri);
+                    const photoData = await readFileAsync(photoPath);
+                    const base64Content = photoData.toString('base64');
+                    const together = new Together();
+                    const explanations = await together.chat.completions.create({
+                        model: "meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo",
+                        messages: [
+                            {
+                                role: "user",
+                                content: [
+                                    {
+                                        type: "text",
+                                        text: "Describe the content of the image in detail in 3 sentences."
+                                    },
+                                    {
+                                        type: "image_url",
+                                        image_url: {
+                                            url: `data:image/jpeg;base64,${base64Content}`,
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    });
+                    return explanations.choices[0].message.content;
+                }));
+
+                console.log(`Got ${photoContents.length} photo contents`);
+                photoContents.forEach((content, i) => {
+                    console.log(`Photo ${i + 1}: ${content}`);
+                });
+
+                const photoEmbeddings = await Promise.all(photoContents.map(content => getEmbedding([content])));
+
+                const messagesWithPhotos = photoMessages.map((m, i) => ({
+                    type: 'message',
+                    sender: m.sender_name,
+                    timestamp: m.timestamp_ms,
+                    message: `This message is a photo of ${photoContents[i]}`,
+                    embedding: photoEmbeddings[i][0],
+                }));
+
+                await messagesCollection.insertMany(messagesWithPhotos);
+
+                console.log(`Got ${photoEmbeddings.length} photo embeddings`);
+            }
+
             messages = messages.concat(currentMessages);
             console.log(`User ${folder} has ${currentMessages.length} messages`);
             if (participants.length > 2) {

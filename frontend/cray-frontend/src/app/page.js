@@ -21,7 +21,7 @@ export default function Home() {
       const initialMessages = [
         {
           sender: "Clay",
-          text: "Hey there! I'm Clay, your personal chats and network analyst 🤖",
+          text: "Hey there! I'm Clay, your personal chats and network analyst 🤖\n\nI have analyzed your messages, photos and voice messages.",
         }
       ];
       setMessages(initialMessages);
@@ -55,11 +55,18 @@ export default function Home() {
     }
   }
 
+  const askForProfileDetails = async (username) => {
+    const profile = profiles.find(p => p.username === username);
+    setMessages(messages => [...messages, { sender: "Clay", text: `
+      ${profile.username}, ${profile.notableMemories.join('\n')}
+      `, metadata: null }]);
+  }
+
   return (
     <div>
       <Splitter style={{ height: '100vh' }}>
           <SplitterPanel className="flex align-items-center justify-content-center" size={70}>
-            <PixiCanvas profiles={profiles} />
+            <PixiCanvas profiles={profiles} askForProfileDetails={askForProfileDetails} />
           </SplitterPanel>
           <SplitterPanel className="flex flex-col justify-between p-3" size={30}>
             <div className="space-y-3 overflow-y-auto">
